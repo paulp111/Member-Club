@@ -1,0 +1,13 @@
+<%- include('partials/header', { title: 'Member Codes' }) %>
+
+<h1 class="page-title">Member Codes</h1>
+
+<div class="codes-container">
+  <ul class="code-list">
+    <% codes.forEach(function(code) { %>
+      <li class="code-item"><%= code.code %></li>
+    <% }) %>
+  </ul>
+</div>
+
+<%- include('partials/footer') %>

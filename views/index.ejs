@@ -1,0 +1,10 @@
+<%- include('partials/header', {title: title}) %>
+
+<main>
+    <h1>Index - message board</h1>
+    <% if (locals.currentUser) { %>
+        <h2>Welcome <%= currentUser.forename %> you are logged in as <%= currentUser.role %></h2>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>

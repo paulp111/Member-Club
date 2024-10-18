@@ -1,0 +1,26 @@
+<%- include('partials/header', {title: title}) %>
+<main>
+    <%- include('partials/errors') %>
+  <form action="/sign-up" method="post">
+    <label for="forename">Forename:</label>
+    <input type="text" name="forename" id="forename" value="<%= locals.user ? user.forename : '' %>" />
+
+    <label for="surname">Surname:</label>
+    <input type="text" name="surname" id="surname" value="<%= locals.user ? user.surname : '' %>" />
+
+    <label for="email">Email:</label>
+    <input type="email" name="email" id="email" value="<%= locals.user ? user.forename : '' %>"/>
+
+    <label for="password">New Password:</label>
+    <input type="password" name="password" id="password" />
+
+    <label for="pass-confirm">Confirm Password:</label>
+    <input type="password" name="pass-confirm" id="pass-confirm" />
+
+    <input type="submit" value="Sign-up" />
+  </form>
+
+  <span class="log-in-link">Already a member? <a href="/login">Login</a></span>
+</main>
+
+<%- include('partials/footer') %>
