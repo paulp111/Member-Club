@@ -1,12 +1,11 @@
 const { Pool } = require("pg");
-require('dotenv').config(); 
+require('dotenv').config();
 
 const pgPool = new Pool({
-    host: 'localhost', 
-    port: 5432,
-    user: 'postgres',
-    password: '123',
-    database: 'member_club'
+    connectionString: process.env.DATABASE_URL,  // Nutze die DATABASE_URL von Railway
+    ssl: {
+        rejectUnauthorized: false  // SSL-Verbindung für Railway erforderlich
+    }
 });
 
 module.exports = pgPool;

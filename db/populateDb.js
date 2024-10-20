@@ -60,7 +60,10 @@ async function populateMemberCodes(client) {
 async function main() {
     console.log('Seeding ...');
     const client = new Client({
-        connectionString: `postgresql://postgres:123@localhost:5432/member_club`
+        connectionString: process.env.DATABASE_URL,  // Nutze die DATABASE_URL von Railway
+        ssl: {
+            rejectUnauthorized: false  // SSL-Verbindung für Railway erforderlich
+        }
     });
 
     try {
