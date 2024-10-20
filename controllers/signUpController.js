@@ -1,6 +1,6 @@
 const { body, validationResult } = require("express-validator");
 const db = require("../db/querys");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 
 const alphaError = "must have alphabetical chars.";
 const lengthError = "must have at least 5 and max 30.";
