@@ -3,6 +3,7 @@ const session = require('express-session');
 const pgPool = require('./db/pool'); 
 const path = require('path');
 const passport = require('passport');
+const flash = require('connect-flash'); 
 require('dotenv').config();
 const PORT = process.env.PORT || 3001;
 
@@ -17,7 +18,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Read body (for form data)
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 // Set session store to DB
 const sessionStore = require("./session/sessionStore");
@@ -33,15 +34,22 @@ app.use(
             maxAge: 24 * 60 * 60 * 1000 // 1 Tag
         },
     })
-); 
+);
+
+// Initialize Flash Messages
+app.use(flash());
 
 // Initialize Passport.js
 require('./config/passport');
-app.use(passport.session());
+app.use(passport.initialize());  // Initialisiert Passport
+app.use(passport.session());     // Benutzersitzung über Passport
 
-// Make the user available in all views
+// Make flash messages and user available in all views
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     next();
 });
 
@@ -55,53 +63,13 @@ app.use((req, res, next) => {
 // Load routers
 const indexRouter = require('./routes/indexRouter');
 const messageRouter = require("./routes/messageRouter");
-const memberCodeRouter = require('./routes/memberCodeRouter'); // Neu hinzugefügt
+const memberCodeRouter = require('./routes/memberCodeRouter'); 
 
 app.use('/', indexRouter);
 app.use("/messages", messageRouter);
-app.use("/", memberCodeRouter); // Neu hinzugefügt
+app.use("/", memberCodeRouter);
 
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-
-/*
-const globalMiddleWare = (req, res, next) => {
-    console.log('global middleware running...');
-    next();
-};
-
-// Register global middleware
-app.use(globalMiddleWare);
-
-const middleware = (req, res, next) => {
-    res.send('hello express');
-    next();
-};
-
-const middleware2 = (req, res, next) => {
-    console.log('this is middleware #2');
-    next();
-};
-
-const middleware3 = (req, res) => {
-    console.log('this is middleware #3');
-};
-
-// Define routes
-app.get('/', middleware, middleware2, middleware3);
-
-app.get('/users/:userId', (req, res) => {
-    console.log(`This is my user Id: ${req.params.userId}`);
-    res.send(`This is my user Id: ${req.params.userId}`);
-});
-app.get('users/create', (req, res) => {
-    res.send(`create new user`)
-})
-
-app.get('/login', (req, res) => {
-    res.send('this is login');
-});
-*/

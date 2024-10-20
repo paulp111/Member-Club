@@ -38,10 +38,17 @@ const getAllMessages = async () => {
   return rows;
 };
 
+// Holt alle Benutzer aus der users-Tabelle
+const getAllUsers = async () => {
+  const { rows } = await pgPool.query("SELECT * FROM users");
+  return rows;
+};
+
 module.exports = {
   pushUser,
   getUserCredentials,
   getUserById,
   getAllMemberCodes, // Mitgliedscodes abrufen
   getAllMessages,    // Nachrichten abrufen
+  getAllUsers,       // Alle Benutzer abrufen
 };

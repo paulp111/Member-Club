@@ -1,26 +1,44 @@
-<%- include('partials/header', {title: title}) %>
-<main>
-    <%- include('partials/errors') %>
-  <form action="/sign-up" method="post">
-    <label for="forename">Forename:</label>
-    <input type="text" name="forename" id="forename" value="<%= locals.user ? user.forename : '' %>" />
+<%- include('partials/header', {title: 'Sign-Up'}) %>
 
-    <label for="surname">Surname:</label>
-    <input type="text" name="surname" id="surname" value="<%= locals.user ? user.surname : '' %>" />
+<main class="form-container">
+  <% if (errors && errors.length > 0) { %>
+    <ul class="error-list">
+      <% errors.forEach(function(error) { %>
+        <li class="error-message"><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
 
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email" value="<%= locals.user ? user.forename : '' %>"/>
+  <form action="/sign-up" method="POST" class="signup-form">
+    <div class="form-group">
+      <label for="forename">Forename:</label>
+      <input type="text" name="forename" value="<%= user ? user.forename : '' %>" class="form-input" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="surname">Surname:</label>
+      <input type="text" name="surname" value="<%= user ? user.surname : '' %>" class="form-input" required>
+    </div>
 
-    <label for="password">New Password:</label>
-    <input type="password" name="password" id="password" />
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" name="email" value="<%= user ? user.email : '' %>" class="form-input" required>
+    </div>
 
-    <label for="pass-confirm">Confirm Password:</label>
-    <input type="password" name="pass-confirm" id="pass-confirm" />
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" name="password" class="form-input" required>
+    </div>
 
-    <input type="submit" value="Sign-up" />
+    <div class="form-group">
+      <label for="pass-confirm">Confirm Password:</label>
+      <input type="password" name="pass-confirm" class="form-input" required>
+    </div>
+
+    <button type="submit" class="form-button">Sign Up</button>
   </form>
 
-  <span class="log-in-link">Already a member? <a href="/login">Login</a></span>
+  <span class="log-in-link">Already have an account? <a href="/login">Login here</a></span>
 </main>
 
 <%- include('partials/footer') %>

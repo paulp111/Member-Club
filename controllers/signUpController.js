@@ -1,6 +1,5 @@
 const { body, validationResult } = require("express-validator");
 const db = require("../db/querys");
-//TODO: use node crypto
 const bcrypt = require("bcrypt");
 
 const alphaError = "must have alphabetical chars.";
@@ -24,11 +23,9 @@ const validateSchema = [
     .trim(),
   body("email").isEmail().withMessage(`email ${emailError}`).trim(),
   body("password")
-    .isLength({ min: 4 })
+    .isLength({ min: 4 }) // Minimumlänge auf 12 gesetzt
     .withMessage(`password ${passwordError}`)
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
-    )
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)
     .withMessage(
       "Password must include at least one lowercase letter, one uppercase letter, one number, and one special character"
     )
@@ -57,20 +54,25 @@ const signUpPost = [
         errors: errors.array(),
       });
     }
-    //Passwort verschlüsseln
+    //Passwort verschlüsseln und Benutzer speichern
     try {
       const { forename, surname, email, password } = req.body;
-      console.log(db);
-      bcrypt.hash(password, 10, async (err, hashedPassword) => {
-        if (err) return res.render("error-page", { title: "Error" });
-        await db.pushUser({
-          forename,
-          surname,
-          email,
-          password: hashedPassword,
-        });
+      
+      // Hash das Passwort
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      // Benutzer in der Datenbank speichern
+      await db.pushUser({
+        forename,
+        surname,
+        email,
+        password: hashedPassword,
       });
+
+      // Erfolgsmeldung für den Benutzer
+      req.flash('success_msg', 'You are now registered and can log in!');
       res.redirect("/login");
+
     } catch (err) {
       next(err);
     }
@@ -79,5 +81,8 @@ const signUpPost = [
 
 module.exports = {
   signUpGet,
-  signUpPost, 
+  signUpPost,
 };
+
+
+

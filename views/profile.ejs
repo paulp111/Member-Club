@@ -1,0 +1,10 @@
+<%- include('partials/header', {title: 'Your Profile'}) %>
+
+<main class="profile-container">
+  <h1>Welcome, <%= user.forename %>!</h1>
+  <p>You are logged in as <%= user.forename %> <%= user.surname %> (<%= user.email %>)</p>
+
+  <a href="/logout" class="form-button">Logout</a>
+</main>
+
+<%- include('partials/footer') %>
