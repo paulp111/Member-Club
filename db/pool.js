@@ -1,10 +1,9 @@
 const { Pool } = require("pg");
-require('dotenv').config();
 
 const pgPool = new Pool({
-    connectionString: process.env.DATABASE_URL,  // Nutze die DATABASE_URL von Railway
+    connectionString: 'postgresql://postgres:mORjmOtURScXcjZSSzPJItZOPPLewKqZ@postgres.railway.internal:5432/railway',
     ssl: {
-        rejectUnauthorized: false  // SSL-Verbindung für Railway erforderlich
+        rejectUnauthorized: false  // SSL ist erforderlich für Railway-Verbindungen
     }
 });
 

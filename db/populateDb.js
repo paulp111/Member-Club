@@ -1,5 +1,11 @@
 const { Client } = require("pg");
-require('dotenv').config();
+
+const client = new Client({
+    connectionString: 'postgresql://postgres:mORjmOtURScXcjZSSzPJItZOPPLewKqZ@postgres.railway.internal:5432/railway',
+    ssl: {
+        rejectUnauthorized: false  // SSL ist erforderlich für Railway-Verbindungen
+    }
+});
 
 const SQL = `
     CREATE TABLE IF NOT EXISTS roles(
@@ -10,7 +16,7 @@ const SQL = `
     VALUES  ('user'),
             ('members'),
            ('admin')
-    ON CONFLICT DO NOTHING;  -- Verhindert Duplikate bei mehrfacher Ausführung
+    ON CONFLICT DO NOTHING;
 
     CREATE TABLE IF NOT EXISTS member_codes (
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -47,7 +53,6 @@ const memberCodes = [
 ];
 
 async function populateMemberCodes(client) {
-    // Füge die festen Mitgliedscodes ein
     for (let code of memberCodes) {
         try {
             await client.query("INSERT INTO member_codes (code) VALUES ($1) ON CONFLICT DO NOTHING", [code]);
@@ -59,19 +64,12 @@ async function populateMemberCodes(client) {
 
 async function main() {
     console.log('Seeding ...');
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,  // Nutze die DATABASE_URL von Railway
-        ssl: {
-            rejectUnauthorized: false  // SSL-Verbindung für Railway erforderlich
-        }
-    });
 
     try {
         await client.connect();
         await client.query(SQL);
         console.log('Tabellen erfolgreich erstellt.');
-        
-        // Füge die Mitgliedscodes hinzu
+
         await populateMemberCodes(client);
         console.log('Mitgliedscodes erfolgreich hinzugefügt.');
     } catch (err) {
